@@ -14,7 +14,7 @@ def load_data_and_labels(positive_data_file, negative_data_file):
     x_text = [clean_str(sent) for sent in x_text]
 
     y = np.concatenate([positive_labels, negative_labels], 0)
-    return [x_text, y]
+    return x_text, y
 
 def clean_str(string):
     """
@@ -55,19 +55,3 @@ def batch_iter(data, batch_size, num_epochs, shuffle=True): # shuffle=True洗牌
             end_index = min((batch_num + 1) * batch_size, data_size) # 判断下一个batch是不是超过最后一个数据了
             yield shuffled_data[start_index:end_index]
 
-
-def build_vocab(sentences):
-    """
-    Builds a vocabulary mapping from word to index based on the sentences.
-    Returns vocabulary mapping and inverse vocabulary mapping.
-    """
-    # Build vocabulary
-
-    counter = collections.Counter(sentences)
-    count_pairs = sorted(counter.items(), key=lambda x: (-x[1], x[0]))  # 负号代表降序排序，小括号代表元组,x[1],x[0]的顺序是有玄机的
-    # 首先根据键值的降序排列，如果出现键值一样的，再根据键的顺序排
-
-    words, _ = list(zip(*count_pairs))  # zip是压缩函数，将两个列表压成一个元组列表，对应压缩;‘*’代表解压缩，将元组解成两个列表,word代表键
-    word_to_id = dict(zip(words, range(len(words))))  # dict将元组转化为字典，zip将word里的元素编号，弄成元组的形式
-
-    return word_to_id  # 返回编好号的单词
